@@ -4,23 +4,26 @@ import Button from '../button/Button';
 
 const App=() =>{
     const [value, setValue] = useState("0");
-    const [memories,setMemories] = useState('0');
+    const [memories,setMemories] = useState('');
     const [operator, setOperator] = useState(null);
 
     const handleButtonPress= content=>()=>{
+        const number = parseFloat(value);
         switch(content){
             case 'AC':
                 setMemories("0");
+                setOperator(null);
+                setValue("0")
                 break;
             case '%':
-                setMemories(memories*0.01)
+                setMemories(number*0.01)
                 break;
             case '±':
-                setMemories(memories*-1)
+                setMemories(number*-1)
                 break;
             case '+':
-                setOperator('+');
-                setMemories(parseFloat(memories)+parseFloat(value))
+               setMemories(number+parseFloat(value))
+               setValue('0')
                 break;
             case '-':
                 setOperator('-')
@@ -32,9 +35,12 @@ const App=() =>{
                 setOperator('÷')
                 break;
             default:
-                setMemories(parseFloat(memories)+ content.toString());
+                setValue(parseFloat(value)+ content.toString());
                 break;
         }
+        console.log(value)
+        console.log(memories)
+        console.log(operator)
     }
     return (
 
