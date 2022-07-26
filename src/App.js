@@ -1,23 +1,131 @@
-import logo from './logo.svg';
+import { useEffect, useState } from 'react';
 import './App.css';
+import Button from './components/button/Button';
 
 function App() {
+  const [time,setTime]=useState(new Date());
+  const [memory, setMemory] = useState(null)
+  const [value,setValue]=useState('0');
+  const [operator, setOperator] = useState('');
+  const calculate = ()=>{
+  if (operator !== null) {
+      if (operator === "+") {
+        setMemory(memory + parseFloat(value));
+      } else if (operator === "−") {
+        setMemory(memory - parseFloat(value));
+      } else if (operator === "×") {
+        setMemory(memory * parseFloat(value));
+      } else if (operator === "÷") {
+        setMemory(memory / parseFloat(value));
+      }
+    } else {
+      setMemory(parseFloat(value));
+    }
+    setValue("0");
+  }
+  useEffect(() => {
+    setTime(new Date());
+  }, [new Date().getSeconds()]);
+
+  const handleButtonPress = content => () => {
+    const num = parseFloat(value);
+
+    switch(content){
+      case "AC":
+        setValue("0");
+        setMemory(null);
+        setOperator(null);
+        break;
+      case "±":
+        setValue((num * -1).toString());
+        break;
+      case "%":
+        setValue((num / 100).toString());
+        setMemory(null);
+        setOperator(null);
+        break;
+      case ".":
+        if (value.includes(".")) return;
+        setValue(value + ".");
+        break;
+      case "+":
+        calculate()
+        setOperator("+");
+        break;
+      case "−":
+        calculate()
+      setOperator("−");
+        break;
+      case "×":
+        calculate()
+        setOperator("×");
+        break;
+      case "÷":
+        calculate()
+        setOperator("÷");
+        break;
+      case "=":
+        if (!operator) break;
+        if (operator === "+") {
+          setValue((memory + parseFloat(value)).toString());
+        } else if (operator === "−") {
+          setValue((memory - parseFloat(value)).toString());
+        } else if (operator === "×") {
+          setValue((memory * parseFloat(value)).toString());
+        } else if (operator === "÷") {
+          setValue((memory / parseFloat(value)).toString());
+        }
+        setMemory(null);
+        setOperator(null);
+        break;
+        default:
+          break;
+      }
+
+    if (value[value.length - 1] === ".") {
+      setValue(value + content);
+    } else {
+      setValue(parseFloat(num + content).toString());
+    }
+  };
+
+  
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='App'>
+      <div className='top'>
+       {time
+            .getHours()
+            .toString()
+            .padStart(2, "0")}
+          :
+          {time
+            .getMinutes()
+            .toString()
+            .padStart(2, "0")}
+      </div>
+      <div className='display'>{value||memory||0}</div>
+      <div className='numberPanel'>
+        <Button onButtonClick={handleButtonPress} content="AC" type="function" />
+        <Button onButtonClick={handleButtonPress} content="±" type="function" />
+        <Button onButtonClick={handleButtonPress} content="%" type="function" />
+        <Button onButtonClick={handleButtonPress} content="÷" type="operator" />
+        <Button onButtonClick={handleButtonPress} content="7" />
+        <Button onButtonClick={handleButtonPress} content="8" />
+        <Button onButtonClick={handleButtonPress} content="9" />
+        <Button onButtonClick={handleButtonPress} content="×" type="operator" />
+        <Button onButtonClick={handleButtonPress} content="4" />
+        <Button onButtonClick={handleButtonPress} content="5" />
+        <Button onButtonClick={handleButtonPress} content="6" />
+        <Button onButtonClick={handleButtonPress} content="−" type="operator" />
+        <Button onButtonClick={handleButtonPress} content="1" />
+        <Button onButtonClick={handleButtonPress} content="2" />
+        <Button onButtonClick={handleButtonPress} content="3" />
+        <Button onButtonClick={handleButtonPress} content="+" type="operator" />
+        <Button onButtonClick={handleButtonPress} content="0" />
+        <Button onButtonClick={handleButtonPress} content="." />
+        <Button onButtonClick={handleButtonPress} content="=" type="operator" />
+      </div>
+      <div className='bottom'></div>
     </div>
   );
 }
