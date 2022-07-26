@@ -27,60 +27,75 @@ function App() {
     setTime(new Date());
   }, [new Date().getSeconds()]);
 
+  
+
   const handleButtonPress = content => () => {
     const num = parseFloat(value);
 
-    switch(content){
-      case "AC":
-        setValue("0");
-        setMemory(null);
-        setOperator(null);
-        break;
-      case "±":
-        setValue((num * -1).toString());
-        break;
-      case "%":
-        setValue((num / 100).toString());
-        setMemory(null);
-        setOperator(null);
-        break;
-      case ".":
-        if (value.includes(".")) return;
-        setValue(value + ".");
-        break;
-      case "+":
-        calculate()
-        setOperator("+");
-        break;
-      case "−":
-        calculate()
+      
+    if (content === "AC") {
+      setValue("0");
+      setMemory(null);
+      setOperator(null);
+      return;
+    }
+
+    if (content === "±") {
+      setValue((num * -1).toString());
+      return;
+    }
+
+    if (content === "%") {
+      setValue((num / 100).toString());
+      setMemory(null);
+      setOperator(null);
+      return;
+    }
+
+    if (content === ".") {
+      if (value.includes(".")) return;
+
+      setValue(value + ".");
+      return;
+    }
+
+    if (content === "+") {
+      calculate()
+      setOperator("+");
+      return;
+    }
+    if (content === "−") {
+      calculate()
       setOperator("−");
-        break;
-      case "×":
-        calculate()
-        setOperator("×");
-        break;
-      case "÷":
-        calculate()
-        setOperator("÷");
-        break;
-      case "=":
-        if (!operator) break;
-        if (operator === "+") {
-          setValue((memory + parseFloat(value)).toString());
-        } else if (operator === "−") {
-          setValue((memory - parseFloat(value)).toString());
-        } else if (operator === "×") {
-          setValue((memory * parseFloat(value)).toString());
-        } else if (operator === "÷") {
-          setValue((memory / parseFloat(value)).toString());
-        }
-        setMemory(null);
-        setOperator(null);
-        break;
-        default:
-          break;
+      return;
+    }
+    if (content === "×") {
+      calculate()
+      setOperator("×");
+      return;
+    }
+    if (content === "÷") {
+      calculate()
+      setOperator("÷");
+      return;
+    }
+
+    if (content === "=") {
+      if (!operator) return;
+
+      if (operator === "+") {
+        setValue((memory + parseFloat(value)).toString());
+      } else if (operator === "−") {
+        setValue((memory - parseFloat(value)).toString());
+      } else if (operator === "×") {
+        setValue((memory * parseFloat(value)).toString());
+      } else if (operator === "÷") {
+        setValue((memory / parseFloat(value)).toString());
       }
+      setMemory(null);
+      setOperator(null);
+      return;
+    }
 
     if (value[value.length - 1] === ".") {
       setValue(value + content);
